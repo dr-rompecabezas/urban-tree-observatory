@@ -3,9 +3,9 @@ volumes:
   pgadmin_data:
 
 services:
-  # PostgreSQL database with PostGIS extension
+  # PostgreSQL database with PostGIS extension (multi-architecture support)
   db:
-    image: postgis/postgis:17-3.5
+    image: nickblah/postgis:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
@@ -40,7 +40,7 @@ services:
   # Angular frontend
   frontend:
     build: ./frontend
-    command: npm start
+    command: npm start -- --host 0.0.0.0 --poll=2000
     volumes:
       - ./frontend:/app
       - /app/node_modules
