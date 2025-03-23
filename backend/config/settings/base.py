@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",  # Django AllAuth
+    "django.contrib.sites",  # Required by Django AllAuth
     "django.contrib.gis",  # GeoDjango
     # Third-party apps
     "rest_framework",
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware",  # Django AllAuth
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -81,7 +81,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",
-        default="postgis://postgres:postgres@localhost:5432/urban_tree_db",
+        default="postgis://postgres:postgres@db:5432/urban_tree_db",
         engine="django.contrib.gis.db.backends.postgis",
     )
 }
@@ -151,31 +151,9 @@ STORAGES = {
     },
 }
 
-# Media files
-if DEBUG:
-    MEDIA_URL = "media/"
-    MEDIA_ROOT = BASE_DIR / "media"
-else:
-    # For production, update STORAGES configuration
-    # instead of using DEFAULT_FILE_STORAGE
-    # AWS S3 settings for production if needed
-    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID", default="")
-    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY", default="")
-    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="")
-
-    if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
-        # Use S3 for media
-        AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-        AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
-        AWS_DEFAULT_ACL = "public-read"
-
-        # Update STORAGES config
-        STORAGES["default"] = {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}
-        MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    else:
-        # Fallback to local file storage for media
-        MEDIA_URL = "media/"
-        MEDIA_ROOT = BASE_DIR / "media"
+# Media files - Basic configuration for all environments
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -193,9 +171,5 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 
 # GeoDjango-specific settings
-GDAL_LIBRARY_PATH = env(
-    "GDAL_LIBRARY_PATH", default="/opt/homebrew/opt/gdal/lib/libgdal.dylib"
-)
-GEOS_LIBRARY_PATH = env(
-    "GEOS_LIBRARY_PATH", default="/opt/homebrew/opt/geos/lib/libgeos_c.dylib"
-)
+GDAL_LIBRARY_PATH = env("GDAL_LIBRARY_PATH", default=None)
+GEOS_LIBRARY_PATH = env("GEOS_LIBRARY_PATH", default=None)

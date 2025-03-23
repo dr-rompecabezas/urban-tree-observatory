@@ -1,8 +1,16 @@
 from .base import *  # noqa: F403
-from .base import INSTALLED_APPS, MIDDLEWARE
+from .base import INSTALLED_APPS, MIDDLEWARE, env
 
 # Override base settings for development
 DEBUG = True
+
+# Docker-specific GeoDjango settings
+GDAL_LIBRARY_PATH = env(
+    "GDAL_LIBRARY_PATH", default="/usr/lib/aarch64-linux-gnu/libgdal.so.32"
+)
+GEOS_LIBRARY_PATH = env(
+    "GEOS_LIBRARY_PATH", default="/usr/lib/aarch64-linux-gnu/libgeos_c.so.1"
+)
 
 # Extra debugging tools for development
 INSTALLED_APPS += [
