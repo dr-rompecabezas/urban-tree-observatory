@@ -1,5 +1,7 @@
 # Urban Tree Observatory Project
 
+> ⚠️ The code in this repo was contributed to [Omdena](https://www.omdena.com/) to kickstart the [Urban Tree Observatory Project](https://github.com/OmdenaAI/GibdetColombiaChapter_UrbanTreeObservatory). It is no longer being maintained.
+
 ## Project Overview
 
 The Urban Tree Observatory is a data-driven platform for monitoring and conserving urban trees in Ibagué, Colombia. The project centralizes tree data, enables citizen reporting, and tracks conservation efforts.
